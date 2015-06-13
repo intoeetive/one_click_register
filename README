@@ -1,0 +1,5 @@
+This add-on allows creation of user account with a single click.
+
+Authorized person will need to access URL provided in module's Control Panel (having email@email.email replaced with actual email address)
+
+The user will be send email with the password and email verification link, template for which is defined in settings.
