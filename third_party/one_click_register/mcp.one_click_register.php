@@ -81,7 +81,7 @@ class One_click_register_mcp {
         unset($_POST['submit']);
         
         ee()->db->where('module_name', 'One_click_register');
-    	ee()->db->update('modules', array('settings' => serialize($_POST)));
+    	ee()->db->update('modules', array('settings' => base64_encode(serialize($_POST))));
     	
     	ee()->session->set_flashdata(
     		'message_success',
