@@ -51,7 +51,7 @@ class One_click_register_mcp {
 						->get();
         
         $vars = array(
-            'url' => rtrim(ee()->config->item('site_url'), '/').'/?ACT='.$act->row('action_id').'&secret='.$this->settings['secret'].'&email=email@email.email'
+            'url' => rtrim(ee()->config->item('site_url'), '/').'/?ACT='.$act->row('action_id').'&secret='.$this->settings['secret'].'&email=email@email.email&group_id=5'
         );
  
         $vars['settings'] = array(	

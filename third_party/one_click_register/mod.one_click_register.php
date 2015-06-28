@@ -70,10 +70,17 @@ class One_click_register {
             ee()->output->show_user_error('general', lang('email_registered'));
         }
         
+        $users_qty = ee()->db->count_all('members');
+        
         //otherwise, let's create an account
         $data = array();
-        $data['email'] = $data['username'] = $data['screen_name'] = ee()->input->get('email');
+        $data['email'] = $data['username'] = ee()->input->get('email');
+        $data['screen_name'] = 'user'.($users_qty+1);
         $data['group_id'] = (ee()->config->item('req_mbr_activation')=='none') ? ee()->config->item('default_member_group') : 4;
+        if (ee()->input->get('group_id')!==false && ee()->input->get('group_id')!==1) 
+        {
+            $data['group_id'] = ee()->input->get('group_id');
+        }
 		$data['ip_address']  = ee()->input->ip_address();
 		$data['unique_id']	= ee()->functions->random('encrypt');
 		$data['join_date']	= ee()->localize->now;
@@ -101,14 +108,12 @@ class One_click_register {
 		$board_id = (ee()->input->get_post('board_id') !== FALSE && is_numeric(ee()->input->get_post('board_id'))) ? ee()->input->get_post('board_id') : 1;
 
 		$forum_id = (ee()->input->get_post('FROM') == 'forum') ? '&r=f&board_id='.$board_id : '';
-
-		$add = ($mailinglist_subscribe !== TRUE) ? '' : '&mailinglist='.$_POST['mailinglist_subscribe'];
         
         $authcode_data = array('authcode' => ee()->functions->random('alnum', 10));
 
 		$swap = array(
 			'name'				=> $name,
-			'activation_url'	=> ee()->functions->fetch_site_index(0, 0).QUERY_MARKER.'ACT='.$action_id.'&id='.$authcode_data['authcode'].$forum_id.$add,
+			'activation_url'	=> ee()->functions->fetch_site_index(0, 0).QUERY_MARKER.'ACT='.$action_id.'&id='.$authcode_data['authcode'].$forum_id,
 			'site_name'			=> stripslashes(ee()->config->item('site_name')),
 			'site_url'			=> ee()->config->item('site_url'),
 			'username'			=> $data['username'],
@@ -141,7 +146,7 @@ class One_click_register {
             				'heading'	=> ee()->lang->line('thank_you'),
             				'content'	=> lang('mbr_registration_completed')."\n\n".lang('mbr_membership_instructions_email'),
             				//'redirect'	=> $_POST['RET'],
-            				'link'		=> array($_POST['RET'], ee()->config->item('site_name')),
+            				'link'		=> array(ee()->config->item('site_url'), ee()->config->item('site_name')),
                             //'rate'		=> 5
         			 );
 			
